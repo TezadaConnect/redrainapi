@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use App\Models\UserInfo;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,12 +30,15 @@ class AuthenticationController extends Controller
             return $this->error('Credentials do not match', 401, []);
         }
 
+        $userInfo = UserInfo::where('user_id', $initUser->id)->first();
+
 
         return $this->success([
             'email' => $initUser->email,
             'username' => $initUser->username,
             'verified' => $initUser->email_verified_at,
-            'token' => $initUser->createToken('API Token User ' . $initUser->username)->plainTextToken,
+            'storyProgressId' => $userInfo ? $userInfo->story_progress_id : null,
+            'token' => $initUser->createToken($initUser->email)->plainTextToken,
         ], "User logged in successfully");
     }
 
@@ -49,9 +53,17 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $userInfo = UserInfo::create([
+            'user_id' => $user->id,
+            'story_progress_id' => 1, // Initial story progress
+        ]);
+
         return $this->success([
-            'user' => $user,
-            'token' => $user->createToken('API Token User ' . $user->username)->plainTextToken,
+            'email' => $user->email,
+            'username' => $user->username,
+            'verified' => $user->email_verified_at,
+            'story_progress_id' => $userInfo ? $userInfo->story_progress_id : null,
+            'token' => $user->createToken($user->email)->plainTextToken,
         ], "User created successfully");
     }
 
