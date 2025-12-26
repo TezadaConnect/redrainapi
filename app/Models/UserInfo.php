@@ -18,11 +18,12 @@ class UserInfo extends Model
     /**
      * The attributes that are mass assignable.
      */
+
     protected $fillable = [
         'user_id',
         'gender',
         'phone',
-        'story_progress_id',
+        'user_progress_id',
     ];
 
     /**
@@ -31,6 +32,11 @@ class UserInfo extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function userProgress()
+    {
+        return $this->hasOne(UserProgress::class, 'id', 'user_progress_id');
     }
 
     /**

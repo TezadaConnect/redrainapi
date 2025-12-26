@@ -6,6 +6,7 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserProgress;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class AuthenticationController extends Controller
             'email' => $initUser->email,
             'username' => $initUser->username,
             'verified' => $initUser->email_verified_at,
-            'storyProgressId' => $userInfo ? $userInfo->story_progress_id : null,
+            'userProgress' => $userInfo ? $userInfo->userProgress : null,
             'token' => $initUser->createToken($initUser->email)->plainTextToken,
         ], "User logged in successfully");
     }
@@ -53,16 +54,24 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $userInfo = UserInfo::create([
+        $userProgress = UserProgress::create([
+            'storyProgressId' => 1,
+            'level' => 1,
+            'experience' => 0,
+            'coins' => 0,
+            'gems' => 0,
+        ]);
+
+        UserInfo::create([
             'user_id' => $user->id,
-            'story_progress_id' => 1, // Initial story progress
+            'user_progress_id' => $userProgress->id,
         ]);
 
         return $this->success([
             'email' => $user->email,
             'username' => $user->username,
             'verified' => $user->email_verified_at,
-            'story_progress_id' => $userInfo ? $userInfo->story_progress_id : null,
+            'userProgress' => $userProgress ? $userProgress : null,
             'token' => $user->createToken($user->email)->plainTextToken,
         ], "User created successfully");
     }

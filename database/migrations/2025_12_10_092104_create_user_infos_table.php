@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->unique(); // link to users table
             $table->integer('gender')->nullable();
             $table->string('phone')->nullable();
-            $table->integer('story_progress_id')->nullable(); //Story progression
+            $table->integer('user_progress_id')->nullable(); //Story progression
             // $table->string('address')->nullable();
             // $table->text('bio')->nullable();
             // $table->date('birth_date')->nullable();
