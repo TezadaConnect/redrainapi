@@ -14,3 +14,4 @@ This Project is intended to be the backend service of Red Rain Game Application.
 ## Contributors
 
 -   Tezada
+-   Craux
